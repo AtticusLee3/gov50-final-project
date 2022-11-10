@@ -115,7 +115,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <!--/radix_placeholder_rmarkdown_metadata-->
   
   <script type="text/json" id="radix-resource-manifest">
-  {"type":"character","attributes":{},"value":["index_files/anchor-4.2.2/anchor.min.js","index_files/bowser-1.9.3/bowser.min.js","index_files/distill-2.2.21/template.v2.js","index_files/header-attrs-2.16/header-attrs.js","index_files/header-attrs-2.17/header-attrs.js","index_files/jquery-3.6.0/jquery-3.6.0.js","index_files/jquery-3.6.0/jquery-3.6.0.min.js","index_files/jquery-3.6.0/jquery-3.6.0.min.map","index_files/popper-2.6.0/popper.min.js","index_files/tippy-6.2.7/tippy-bundle.umd.min.js","index_files/tippy-6.2.7/tippy-light-border.css","index_files/tippy-6.2.7/tippy.css","index_files/tippy-6.2.7/tippy.umd.min.js","index_files/webcomponents-2.0.0/webcomponents.js"]}
+  {"type":"character","attributes":{},"value":["cwed.csv","index_files/anchor-4.2.2/anchor.min.js","index_files/bowser-1.9.3/bowser.min.js","index_files/distill-2.2.21/template.v2.js","index_files/figure-html5/unnamed-chunk-3-1.png","index_files/figure-html5/unnamed-chunk-3-2.png","index_files/figure-html5/unnamed-chunk-3-3.png","index_files/figure-html5/unnamed-chunk-4-1.png","index_files/header-attrs-2.16/header-attrs.js","index_files/header-attrs-2.17/header-attrs.js","index_files/jquery-3.6.0/jquery-3.6.0.js","index_files/jquery-3.6.0/jquery-3.6.0.min.js","index_files/jquery-3.6.0/jquery-3.6.0.min.map","index_files/popper-2.6.0/popper.min.js","index_files/tippy-6.2.7/tippy-bundle.umd.min.js","index_files/tippy-6.2.7/tippy-light-border.css","index_files/tippy-6.2.7/tippy.css","index_files/tippy-6.2.7/tippy.umd.min.js","index_files/webcomponents-2.0.0/webcomponents.js"]}
   </script>
   <!--radix_placeholder_navigation_in_header-->
   <!--/radix_placeholder_navigation_in_header-->
@@ -1522,7 +1522,113 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <h2 id="milestone-2">Milestone 2</h2>
 <p>What effect does unemployment insurance have on life expectancy? In this study, I plan to examine how changes in unemployment insurance replacement rates and total coverage impacts life expectancy at age 65. I hypothesize that higher replacement rates and coverage increases average life expectancy. I also expect that lower replacement rates and coverage will decrease average life expectancy. I expect these to occur because more money given to more people would increase standard of living and possibly lifespan. My sample is comprised of different
 institutional features of national social insurance programs in 27 OECD and 6 non‐OECD countries from the years 1970 to 2011. My explanatory variables of interest are replacement rates and total coverage. Replacement rates are coded on a scale from 0 to 1, representing the percentage of a wage that becomes the benefit. Total coverage is also coded on a scale from 0 to 1, representing the percentage of the labor force insured for unemployment risk. My outcome variable is national life expectancy at age 65, which is coded as the number of years expected to live after the age of 65. For example if the variable = 10, it means life expectancy is 65 + 10 = 75. These variables are measured from the Comparative Welfare Entitlements Dataset, a comprehensive welfare dataset run by Professor Lyle Scruggs and funded by the National Science Foundation and German Research Foundation. If I observe higher life expectancy on average for countries with higher replacement rates and coverage than those with lower replacement rates and coverage, this would provide support to my hypothesis. If I observe lower or similar life expectancy on average for countries with higher replacement rates and coverage than those with lower replacement rates and coverage, this would provide evidence against my hypothesis. When I run my regression of the life expectancy on the replacement rate and coverage indicator variables, a positive, significant coefficient would indicate support for my hypothesis.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<h2 id="milestone-3">Milestone 3</h2>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://tidyverse.tidyverse.org'>tidyverse</a></span><span class='op'>)</span></span>
+<span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span></span>
+<span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/tidymodels/infer'>infer</a></span><span class='op'>)</span></span>
+<span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span></span>
+<span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://broom.tidymodels.org/'>broom</a></span><span class='op'>)</span></span>
+<span></span>
+<span><span class='va'>cwed</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://readr.tidyverse.org/reference/read_delim.html'>read_csv</a></span><span class='op'>(</span><span class='st'>"cwed.csv"</span><span class='op'>)</span></span>
+<span><span class='va'>cwed</span></span></code></pre>
+</div>
+<pre><code># A tibble: 1,386 × 33
+   COUNTRY   COUNTRY AB…¹ CCODE  YEAR ISOCODE TOTGEN UEGEN SKGEN  PGEN
+   &lt;chr&gt;     &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1 Australia AUS              1  1970      36   NA    NA    NA    NA  
+ 2 Australia AUS              1  1971      36   18.4   6.3   5.7   6.4
+ 3 Australia AUS              1  1972      36   19.1   6.7   6     6.4
+ 4 Australia AUS              1  1973      36   20.5   7.4   6.5   6.7
+ 5 Australia AUS              1  1974      36   20.2   7.2   6.4   6.6
+ 6 Australia AUS              1  1975      36   20.2   7.2   6.3   6.7
+ 7 Australia AUS              1  1976      36   21     7.5   6.6   6.8
+ 8 Australia AUS              1  1977      36   21.2   7.6   6.7   6.9
+ 9 Australia AUS              1  1978      36   21.2   7.6   6.6   7.1
+10 Australia AUS              1  1979      36   21.2   7.5   6.6   7.1
+# … with 1,376 more rows, 24 more variables: APWWage &lt;dbl&gt;,
+#   US100 &lt;dbl&gt;, UC1000 &lt;dbl&gt;, SS100 &lt;dbl&gt;, SC1000 &lt;dbl&gt;,
+#   MPS100 &lt;dbl&gt;, MPC1000 &lt;dbl&gt;, SPS100 &lt;dbl&gt;, SPC1000 &lt;dbl&gt;,
+#   UEQUAL &lt;dbl&gt;, UEDUR &lt;dbl&gt;, UEWAIT &lt;dbl&gt;, UECOV &lt;dbl&gt;,
+#   SICKQUAL &lt;dbl&gt;, SICKDUR &lt;dbl&gt;, SICKWAIT &lt;dbl&gt;, SICKCOV &lt;dbl&gt;,
+#   PQUAL &lt;dbl&gt;, PFUND &lt;dbl&gt;, AVGPER &lt;dbl&gt;, PENCOV &lt;dbl&gt;, MRET &lt;dbl&gt;,
+#   FRET &lt;dbl&gt;, LEXP65 &lt;dbl&gt;, and abbreviated variable name …</code></pre>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>cwed</span> <span class='op'>&lt;-</span> <span class='va'>cwed</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/rename.html'>rename</a></span><span class='op'>(</span>country <span class='op'>=</span> <span class='va'>COUNTRY</span>,</span>
+<span>         year <span class='op'>=</span> <span class='va'>YEAR</span>,</span>
+<span>         wage <span class='op'>=</span> <span class='va'>APWWage</span>,</span>
+<span>         UI_rep_single <span class='op'>=</span> <span class='va'>US100</span>,</span>
+<span>         UI_rep_family <span class='op'>=</span> <span class='va'>UC1000</span>,</span>
+<span>         UI_qual <span class='op'>=</span> <span class='va'>UEQUAL</span>,</span>
+<span>         UI_duration <span class='op'>=</span> <span class='va'>UEDUR</span>,</span>
+<span>         UI_wait <span class='op'>=</span> <span class='va'>UEWAIT</span>,</span>
+<span>         UI_cov <span class='op'>=</span> <span class='va'>UECOV</span>,</span>
+<span>         SI_rep_single <span class='op'>=</span> <span class='va'>SS100</span>,</span>
+<span>         SI_rep_family <span class='op'>=</span> <span class='va'>SC1000</span>,</span>
+<span>         SI_qual <span class='op'>=</span> <span class='va'>SICKQUAL</span>,</span>
+<span>         SI_duration <span class='op'>=</span> <span class='va'>SICKDUR</span>,</span>
+<span>         SI_wait <span class='op'>=</span> <span class='va'>SICKWAIT</span>,</span>
+<span>         SI_cov <span class='op'>=</span> <span class='va'>SICKCOV</span>,</span>
+<span>         MinPen_rep_single <span class='op'>=</span> <span class='va'>MPS100</span>,</span>
+<span>         MinPen_rep_family <span class='op'>=</span> <span class='va'>MPC1000</span>,</span>
+<span>         pen_rep_single <span class='op'>=</span> <span class='va'>SPS100</span>,</span>
+<span>         pen_rep_family <span class='op'>=</span> <span class='va'>SPC1000</span>,</span>
+<span>         pen_qual <span class='op'>=</span> <span class='va'>PQUAL</span>,</span>
+<span>         pen_ratio <span class='op'>=</span> <span class='va'>PFUND</span>,</span>
+<span>         pen_years <span class='op'>=</span> <span class='va'>AVGPER</span>,</span>
+<span>         pen_cov <span class='op'>=</span> <span class='va'>PENCOV</span>,</span>
+<span>         male_retirement <span class='op'>=</span> <span class='va'>MRET</span>,</span>
+<span>         female_retirement <span class='op'>=</span> <span class='va'>FRET</span>,</span>
+<span>         life_exp <span class='op'>=</span> <span class='va'>LEXP65</span><span class='op'>)</span> <span class='op'>|&gt;</span> </span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>life_exp <span class='op'>=</span> <span class='va'>life_exp</span> <span class='op'>+</span> <span class='fl'>65</span><span class='op'>)</span></span></code></pre>
+</div>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>cwed</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span>mapping <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>year</span>,</span>
+<span>                       y <span class='op'>=</span> <span class='va'>wage</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line</a></span><span class='op'>(</span>mapping <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>group <span class='op'>=</span> <span class='va'>country</span><span class='op'>)</span>, color <span class='op'>=</span> <span class='st'>"grey70"</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_smooth.html'>geom_smooth</a></span><span class='op'>(</span>method <span class='op'>=</span> <span class='st'>"loess"</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_continuous.html'>scale_y_log10</a></span><span class='op'>(</span><span class='op'>)</span></span></code></pre>
+</div>
+<img src="index_files/figure-html5/unnamed-chunk-3-1.png" width="624" />
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>cwed</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span>mapping <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>year</span>,</span>
+<span>                       y <span class='op'>=</span> <span class='va'>life_exp</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line</a></span><span class='op'>(</span>mapping <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>group <span class='op'>=</span> <span class='va'>country</span><span class='op'>)</span>, color <span class='op'>=</span> <span class='st'>"grey70"</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_smooth.html'>geom_smooth</a></span><span class='op'>(</span>method <span class='op'>=</span> <span class='st'>"loess"</span><span class='op'>)</span></span></code></pre>
+</div>
+<img src="index_files/figure-html5/unnamed-chunk-3-2.png" width="624" />
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>cwed</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span>mapping <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>year</span>,</span>
+<span>                       y <span class='op'>=</span> <span class='va'>UI_cov</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line</a></span><span class='op'>(</span>mapping <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>group <span class='op'>=</span> <span class='va'>country</span><span class='op'>)</span>, color <span class='op'>=</span> <span class='st'>"grey70"</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_smooth.html'>geom_smooth</a></span><span class='op'>(</span>method <span class='op'>=</span> <span class='st'>"loess"</span><span class='op'>)</span></span></code></pre>
+</div>
+<p><img src="index_files/figure-html5/unnamed-chunk-3-3.png" width="624" /></p>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>cwed</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>country</span> <span class='op'><a href='https://rdrr.io/r/base/match.html'>%in%</a></span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"United States"</span>, <span class='st'>"United Kingdom"</span>, <span class='st'>"Italy"</span>, <span class='st'>"Japan"</span>, <span class='st'>"Germany"</span>, <span class='st'>"France"</span>, <span class='st'>"Canada"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>|&gt;</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span>mapping <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>year</span>, </span>
+<span>                       y <span class='op'>=</span> <span class='va'>UI_cov</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line</a></span><span class='op'>(</span>mapping <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>group <span class='op'>=</span> <span class='va'>country</span><span class='op'>)</span>, color <span class='op'>=</span> <span class='st'>"grey70"</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_smooth.html'>geom_smooth</a></span><span class='op'>(</span>method <span class='op'>=</span> <span class='st'>"loess"</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"Year"</span>,</span>
+<span>       y <span class='op'>=</span> <span class='st'>"Percentage of the Labor Force Insured for Unemployment Risk"</span>,</span>
+<span>       title <span class='op'>=</span> <span class='st'>"Unemployment Insurance Coverage for G7 Countries"</span><span class='op'>)</span></span></code></pre>
+</div>
+<p><img src="index_files/figure-html5/unnamed-chunk-4-1.png" width="624" /></p>
+</div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>

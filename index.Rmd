@@ -64,26 +64,26 @@ cwed <- cwed |>
 
 ```{r}
 cwed |>
+  filter(country %in% c("United States", "United Kingdom", "Italy", "Japan", "Germany", "France", "Canada")) |>
   ggplot(mapping = aes(x = year,
                        y = wage)) +
   geom_line(mapping = aes(group = country), color = "grey70") +
   geom_smooth(method = "loess") +
-  scale_y_log10()
+  scale_y_log10() +
+  labs(x = "Year",
+       y = "Wage",
+       title = "Average Wage for G7 Countries Over Time")
 
 cwed |>
+  filter(country %in% c("United States", "United Kingdom", "Italy", "Japan", "Germany", "France", "Canada")) |>
   ggplot(mapping = aes(x = year,
                        y = life_exp)) +
   geom_line(mapping = aes(group = country), color = "grey70") +
-  geom_smooth(method = "loess")
+  geom_smooth(method = "loess") +
+  labs(x = "Year",
+       y = "Life Expectancy",
+       title = "Average Life Expectancy at age 65 for G7 Countries Over Time")
 
-cwed |>
-  ggplot(mapping = aes(x = year,
-                       y = UI_cov)) +
-  geom_line(mapping = aes(group = country), color = "grey70") +
-  geom_smooth(method = "loess")
-```
-
-```{r}
 cwed |>
   filter(country %in% c("United States", "United Kingdom", "Italy", "Japan", "Germany", "France", "Canada")) |>
   ggplot(mapping = aes(x = year, 
@@ -92,7 +92,9 @@ cwed |>
   geom_smooth(method = "loess") +
   labs(x = "Year",
        y = "Percentage of the Labor Force Insured for Unemployment Risk",
-       title = "Unemployment Insurance Coverage for G7 Countries")
+       title = "Unemployment Insurance Coverage for G7 Countries Over Time")
 ```
+
+
 
 
