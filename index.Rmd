@@ -18,3 +18,81 @@ I am interested in exploring data related to universal basic income. I would lik
 What effect does unemployment insurance have on life expectancy? In this study, I plan to examine how changes in unemployment insurance replacement rates and total coverage impacts life expectancy at age 65. I hypothesize that higher replacement rates and coverage increases average life expectancy. I also expect that lower replacement rates and coverage will decrease average life expectancy. I expect these to occur because more money given to more people would increase standard of living and possibly lifespan. My sample is comprised of different
 institutional features of national social insurance programs in 27 OECD and 6 non‐OECD countries from the years 1970 to 2011. My explanatory variables of interest are replacement rates and total coverage. Replacement rates are coded on a scale from 0 to 1, representing the percentage of a wage that becomes the benefit. Total coverage is also coded on a scale from 0 to 1, representing the percentage of the labor force insured for unemployment risk. My outcome variable is national life expectancy at age 65, which is coded as the number of years expected to live after the age of 65. For example if the variable = 10, it means life expectancy is 65 + 10 = 75. These variables are measured from the Comparative Welfare Entitlements Dataset, a comprehensive welfare dataset run by Professor Lyle Scruggs and funded by the National Science Foundation and German Research Foundation. If I observe higher life expectancy on average for countries with higher replacement rates and coverage than those with lower replacement rates and coverage, this would provide support to my hypothesis. If I observe lower or similar life expectancy on average for countries with higher replacement rates and coverage than those with lower replacement rates and coverage, this would provide evidence against my hypothesis. When I run my regression of the life expectancy on the replacement rate and coverage indicator variables, a positive, significant coefficient would indicate support for my hypothesis.
 
+## Milestone 3
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(infer)
+library(dplyr)
+library(broom)
+
+cwed <- read_csv("cwed.csv")
+cwed
+```
+
+```{r}
+cwed <- cwed |>
+  rename(country = COUNTRY,
+         year = YEAR,
+         wage = APWWage,
+         UI_rep_single = US100,
+         UI_rep_family = UC1000,
+         UI_qual = UEQUAL,
+         UI_duration = UEDUR,
+         UI_wait = UEWAIT,
+         UI_cov = UECOV,
+         SI_rep_single = SS100,
+         SI_rep_family = SC1000,
+         SI_qual = SICKQUAL,
+         SI_duration = SICKDUR,
+         SI_wait = SICKWAIT,
+         SI_cov = SICKCOV,
+         MinPen_rep_single = MPS100,
+         MinPen_rep_family = MPC1000,
+         pen_rep_single = SPS100,
+         pen_rep_family = SPC1000,
+         pen_qual = PQUAL,
+         pen_ratio = PFUND,
+         pen_years = AVGPER,
+         pen_cov = PENCOV,
+         male_retirement = MRET,
+         female_retirement = FRET,
+         life_exp = LEXP65) |> 
+  mutate(life_exp = life_exp + 65)
+```
+
+```{r}
+cwed |>
+  ggplot(mapping = aes(x = year,
+                       y = wage)) +
+  geom_line(mapping = aes(group = country), color = "grey70") +
+  geom_smooth(method = "loess") +
+  scale_y_log10()
+
+cwed |>
+  ggplot(mapping = aes(x = year,
+                       y = life_exp)) +
+  geom_line(mapping = aes(group = country), color = "grey70") +
+  geom_smooth(method = "loess")
+
+cwed |>
+  ggplot(mapping = aes(x = year,
+                       y = UI_cov)) +
+  geom_line(mapping = aes(group = country), color = "grey70") +
+  geom_smooth(method = "loess")
+```
+
+```{r}
+cwed |>
+  filter(country %in% c("United States", "United Kingdom", "Italy", "Japan", "Germany", "France", "Canada")) |>
+  ggplot(mapping = aes(x = year, 
+                       y = UI_cov)) +
+  geom_line(mapping = aes(group = country), color = "grey70") +
+  geom_smooth(method = "loess") +
+  labs(x = "Year",
+       y = "Percentage of the Labor Force Insured for Unemployment Risk",
+       title = "Unemployment Insurance Coverage for G7 Countries")
+```
+
+
