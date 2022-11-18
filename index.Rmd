@@ -73,7 +73,9 @@ cwed |>
   labs(x = "Year",
        y = "Wage",
        title = "Average Wage for G7 Countries Over Time")
+```
 
+```{r}
 cwed |>
   filter(country %in% c("United States", "United Kingdom", "Italy", "Japan", "Germany", "France", "Canada")) |>
   ggplot(mapping = aes(x = year,
@@ -83,7 +85,76 @@ cwed |>
   labs(x = "Year",
        y = "Life Expectancy",
        title = "Average Life Expectancy at age 65 for G7 Countries Over Time")
+```
 
+
+```{r}
+UI_rep_single_plot <- cwed |>
+  filter(country %in% c("United States", "United Kingdom", "Italy", "Japan", "Germany", "France", "Canada")) |>
+  ggplot(mapping = aes(x = year, 
+                       y = UI_rep_single)) +
+  geom_line(mapping = aes(group = country), color = "grey70") +
+  geom_smooth(method = "loess") +
+  labs(x = "Year",
+       y = "Unemployment Insurance Single Replacement Rate",
+       title = "Unemployment Insurance Single Replacement Rate for G7 Countries Over Time")
+
+cwed |>
+  filter(country %in% c("United States", "United Kingdom", "Italy", "Japan", "Germany", "France", "Canada")) |>
+  ggplot(mapping = aes(x = year, 
+                       y = UI_rep_family)) +
+  geom_line(mapping = aes(group = country), color = "grey70") +
+  geom_smooth(method = "loess") +
+  labs(x = "Year",
+       y = "Unemployment Insurance Family Replacement Rate",
+       title = "Unemployment Insurance Family Replacement Rate for G7 Countries Over Time")
+```
+
+```{r}
+SI_rep_single_plot <- cwed |>
+  filter(country %in% c("United States", "United Kingdom", "Italy", "Japan", "Germany", "France", "Canada")) |>
+  ggplot(mapping = aes(x = year, 
+                       y = SI_rep_single)) +
+  geom_line(mapping = aes(group = country), color = "grey70") +
+  geom_smooth(method = "loess") +
+  labs(x = "Year",
+       y = "Sickness Insurance Single Replacement Rate",
+       title = "Sickness Insurance Single Replacement Rate for G7 Countries Over Time")
+
+cwed |>
+  filter(country %in% c("United States", "United Kingdom", "Italy", "Japan", "Germany", "France", "Canada")) |>
+  ggplot(mapping = aes(x = year, 
+                       y = SI_rep_family)) +
+  geom_line(mapping = aes(group = country), color = "grey70") +
+  geom_smooth(method = "loess") +
+  labs(x = "Year",
+       y = "Sickness Insurance Family Replacement Rate",
+       title = "Sickness Insurance Family Replacement Rate for G7 Countries Over Time")
+```
+
+```{r}
+MinPen_rep_single_plot <- cwed |>
+  filter(country %in% c("United States", "United Kingdom", "Italy", "Japan", "Germany", "France", "Canada")) |>
+  ggplot(mapping = aes(x = year, 
+                       y = MinPen_rep_single)) +
+  geom_line(mapping = aes(group = country), color = "grey70") +
+  geom_smooth(method = "loess") +
+  labs(x = "Year",
+       y = "Minimum Pension Single Replacement Rate",
+       title = "Minimum Pension Family Replacement Rate for G7 Countries Over Time")
+
+cwed |>
+  filter(country %in% c("United States", "United Kingdom", "Italy", "Japan", "Germany", "France", "Canada")) |>
+  ggplot(mapping = aes(x = year, 
+                       y = MinPen_rep_family)) +
+  geom_line(mapping = aes(group = country), color = "grey70") +
+  geom_smooth(method = "loess") +
+  labs(x = "Year",
+       y = "Minimum Pension Family Replacement Rate",
+       title = "Minimum Pension Family Replacement Rate for G7 Countries Over Time")
+```
+
+```{r}
 cwed |>
   filter(country %in% c("United States", "United Kingdom", "Italy", "Japan", "Germany", "France", "Canada")) |>
   ggplot(mapping = aes(x = year, 
@@ -93,8 +164,51 @@ cwed |>
   labs(x = "Year",
        y = "Percentage of the Labor Force Insured for Unemployment Risk",
        title = "Unemployment Insurance Coverage for G7 Countries Over Time")
+
+cwed |>
+  filter(country %in% c("United States", "United Kingdom", "Italy", "Japan", "Germany", "France", "Canada")) |>
+  ggplot(mapping = aes(x = year, 
+                       y = SI_cov)) +
+  geom_line(mapping = aes(group = country), color = "grey70") +
+  geom_smooth(method = "loess") +
+  labs(x = "Year",
+       y = "Percentage of the Labor Force with Sickpay Insurance",
+       title = "Sickness Insurance Coverage for G7 Countries Over Time")
+
+cwed |>
+  filter(country %in% c("United States", "United Kingdom", "Italy", "Japan", "Germany", "France", "Canada")) |>
+  ggplot(mapping = aes(x = year, 
+                       y = pen_cov)) +
+  geom_line(mapping = aes(group = country), color = "grey70") +
+  geom_smooth(method = "loess") +
+  labs(x = "Year",
+       y = "Portion of Those Above Official Retirement Age Who Are in Receipt of a Public Pension",
+       title = "Pensions Coverage for G7 Countries Over Time")
 ```
 
 
+## Milestone 4
 
+```{r}
+cwed |>
+  filter(country %in% c("United States", "United Kingdom", "Italy", "Japan", "Germany", "France", "Canada")) |>
+  ggplot() +
+  geom_smooth(mapping = aes(x = UI_rep_single, 
+                       y = life_exp), method = "lm")
+
+cwed |>
+  filter(country %in% c("United States", "United Kingdom", "Italy", "Japan", "Germany", "France", "Canada")) |>
+  ggplot() +
+  geom_smooth(mapping = aes(x = SI_rep_single, 
+                       y = life_exp), method = "lm")
+
+cwed |>
+  filter(country %in% c("United States", "United Kingdom", "Italy", "Japan", "Germany", "France", "Canada")) |>
+  ggplot() +
+  geom_smooth(mapping = aes(x = MinPen_rep_single, 
+                       y = life_exp), method = "lm")
+
+```
+
+Comparing the relationship between the replacement rates of the three main types of insurance and life expectancy highlights which relationships are most statistically significant. Since the upper bound of the left side of the confidence interval in the Unemployment Insurance replacement rate and life expectancy graph is lower than the lower bound of the right side, we can conclude that the relationship is statistically significant. The relationship between the Sickness Insurance replacement rate and life expectancy is statistically insignificant because the smoothed line appears flat and the bounds on either side of the confidence interval uniform. The relationship between the Minimum Pension replacement rate and life expectancy is statistically significant (more so than with Unemployment Insurance) because the upper bound of the left side of the confidence interval is lower than the lower bound of the right side. 
 
