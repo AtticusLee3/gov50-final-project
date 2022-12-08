@@ -7,20 +7,8 @@ output:
     self_contained: false
 ---
 
-
-
-## Project thoughts
-
-I am interested in exploring data related to universal basic income. I would like to explore how a UBI or stimulus check affects economic trends, crime rates, education, and ideology.
-
-## Milestone 2
-
-What effect does unemployment insurance have on life expectancy? In this study, I plan to examine how changes in unemployment insurance replacement rates and total coverage impacts life expectancy at age 65. I hypothesize that higher replacement rates and coverage increases average life expectancy. I also expect that lower replacement rates and coverage will decrease average life expectancy. I expect these to occur because more money given to more people would increase standard of living and possibly lifespan. My sample is comprised of different
-institutional features of national social insurance programs in 27 OECD and 6 non‐OECD countries from the years 1970 to 2011. My explanatory variables of interest are replacement rates and total coverage. Replacement rates are coded on a scale from 0 to 1, representing the percentage of a wage that becomes the benefit. Total coverage is also coded on a scale from 0 to 1, representing the percentage of the labor force insured for unemployment risk. My outcome variable is national life expectancy at age 65, which is coded as the number of years expected to live after the age of 65. For example if the variable = 10, it means life expectancy is 65 + 10 = 75. These variables are measured from the Comparative Welfare Entitlements Dataset, a comprehensive welfare dataset run by Professor Lyle Scruggs and funded by the National Science Foundation and German Research Foundation. If I observe higher life expectancy on average for countries with higher replacement rates and coverage than those with lower replacement rates and coverage, this would provide support to my hypothesis. If I observe lower or similar life expectancy on average for countries with higher replacement rates and coverage than those with lower replacement rates and coverage, this would provide evidence against my hypothesis. When I run my regression of the life expectancy on the replacement rate and coverage indicator variables, a positive, significant coefficient would indicate support for my hypothesis.
-
-## Milestone 3
-
 ```{r}
+## Packages
 library(tidyverse)
 library(ggplot2)
 library(infer)
@@ -32,6 +20,7 @@ cwed
 ```
 
 ```{r}
+## Data Simplification
 cwed <- cwed |>
   rename(country = COUNTRY,
          year = YEAR,
@@ -62,153 +51,102 @@ cwed <- cwed |>
   mutate(life_exp = life_exp + 65)
 ```
 
+
+## Introduction
+Welfare programs have long been controversial. Proponents argue that public insurance and pensions help the elderly and those down on their luck. They believe that the higher welfare benefits for the unemployed, sick, and elderly provide a much-needed economic cushion that allows recipients to spend more on essentials and improve their well-being. This project seeks to bring clarity to this issue by exploring how welfare benefits can affect people's lives. Specifically, the project focuses on how the size of benefits for different types of insurance impacts life expectancy. It asks: Does the single replacement rate (the percentage of an individual's income given as insurance benefits) for Unemployment Insurance, Sickness Insurance, and Pensions affect life expectancy at the age of 65? This question may help frame the debate around welfare benefits, an issue that affects, in one way or another, hundreds of millions of people across the globe.
+
+## Data and Research Design
+Data for this project is used from The Comparative Welfare Entitlements Dataset (CWED), which has data on various institutional features of social insurance programs in 33 countries spanning much of the post-war period. The three social programs in the CWED data are Unemployment Insurance, Sickness Insurance, and Pensions.
+
+The analyses covers the following features for Unemployment Insurance and Sickness Insurance:
+- Single Replacement Rate: the percentage of an individual's annual employment income that is given as benefits
+- Family Replacement Rate: the percentage of a family's annual employment income that is given as benefits
+- Waiting days: Days one must wait to start receiving benefit after becoming unemployed/sick
+- Qualification period: Weeks of insurance needed to qualify for benefit
+- Duration: Weeks of benefit entitlement excluding times of means‐tested assistance or long‐term disability/invalidity pensions
+- Coverage: Percentage of the labor force insured for unemployment risk/sick-pay insurance
+
+The analyses covers the following features for Pensions:
+- Minimum Pension Single Replacement Rate: the percentage of an individual's annual employment income that is given as benefits
+- Minimum Pension Family Replacement Rate: the percentage of a family's annual employment income that is given as benefits
+- Standard Pension Single Replacement Rate: the percentage of an individual's annual employment income that is given as benefits
+- Standard Pension Family Replacement Rate: the percentage of a family's annual employment income that is given as benefits
+- Coverage/Take‐up: Portion of those above official retirement age who are in receipt
+of a public pension
+- “Standard” number of years of pension insurance to be considered fully covered
+- The ratio of employee pension contributions to employer and employee pension contributions
+- Years of earnings used in the pensionable wage calculation
+
+The research design is time series cross sectional, as it observes 1,386 samples across 33 countries from 1970 to 2011 to analyze the relationship between the main explanatory variables (unemployment, sickness, and pension replacement rates), and the outcome variable (life expectancy at age 65).
+
+This is the distribution of the outcome variable for all samples:
 ```{r}
-cwed |>
-  filter(country %in% c("United States", "United Kingdom", "Italy", "Japan", "Germany", "France", "Canada")) |>
-  ggplot(mapping = aes(x = year,
-                       y = wage)) +
-  geom_line(mapping = aes(group = country), color = "grey70") +
-  geom_smooth(method = "loess") +
-  scale_y_log10() +
-  labs(x = "Year",
-       y = "Wage",
-       title = "Average Wage for G7 Countries Over Time")
+ggplot(data = cwed, mapping = aes(x = life_exp)) +
+  geom_histogram(aes(y = ..density..)) +
+  labs(x = "Life Expectanct at Age 65",
+       y = "Density",
+       title = "Distribution of Life Expectancy")
 ```
 
+This is how the outcome variable changed over time in each country. The blue line represent the line of best fit for the aggregate data.
 ```{r}
-cwed |>
-  filter(country %in% c("United States", "United Kingdom", "Italy", "Japan", "Germany", "France", "Canada")) |>
-  ggplot(mapping = aes(x = year,
+ggplot(data = cwed, mapping = aes(x = year,
                        y = life_exp)) +
   geom_line(mapping = aes(group = country), color = "grey70") +
   geom_smooth(method = "loess") +
   labs(x = "Year",
        y = "Life Expectancy",
-       title = "Average Life Expectancy at age 65 for G7 Countries Over Time")
+       title = "Average Life Expectancy at age 65 Over Time")
 ```
 
+## Results
 
 ```{r}
-UI_rep_single_plot <- cwed |>
-  filter(country %in% c("United States", "United Kingdom", "Italy", "Japan", "Germany", "France", "Canada")) |>
-  ggplot(mapping = aes(x = year, 
-                       y = UI_rep_single)) +
-  geom_line(mapping = aes(group = country), color = "grey70") +
-  geom_smooth(method = "loess") +
-  labs(x = "Year",
-       y = "Unemployment Insurance Single Replacement Rate",
-       title = "Unemployment Insurance Single Replacement Rate for G7 Countries Over Time")
+## Bivariate Plots
 
-cwed |>
-  filter(country %in% c("United States", "United Kingdom", "Italy", "Japan", "Germany", "France", "Canada")) |>
-  ggplot(mapping = aes(x = year, 
-                       y = UI_rep_family)) +
-  geom_line(mapping = aes(group = country), color = "grey70") +
-  geom_smooth(method = "loess") +
-  labs(x = "Year",
-       y = "Unemployment Insurance Family Replacement Rate",
-       title = "Unemployment Insurance Family Replacement Rate for G7 Countries Over Time")
-```
-
-```{r}
-SI_rep_single_plot <- cwed |>
-  filter(country %in% c("United States", "United Kingdom", "Italy", "Japan", "Germany", "France", "Canada")) |>
-  ggplot(mapping = aes(x = year, 
-                       y = SI_rep_single)) +
-  geom_line(mapping = aes(group = country), color = "grey70") +
-  geom_smooth(method = "loess") +
-  labs(x = "Year",
-       y = "Sickness Insurance Single Replacement Rate",
-       title = "Sickness Insurance Single Replacement Rate for G7 Countries Over Time")
-
-cwed |>
-  filter(country %in% c("United States", "United Kingdom", "Italy", "Japan", "Germany", "France", "Canada")) |>
-  ggplot(mapping = aes(x = year, 
-                       y = SI_rep_family)) +
-  geom_line(mapping = aes(group = country), color = "grey70") +
-  geom_smooth(method = "loess") +
-  labs(x = "Year",
-       y = "Sickness Insurance Family Replacement Rate",
-       title = "Sickness Insurance Family Replacement Rate for G7 Countries Over Time")
-```
-
-```{r}
-MinPen_rep_single_plot <- cwed |>
-  filter(country %in% c("United States", "United Kingdom", "Italy", "Japan", "Germany", "France", "Canada")) |>
-  ggplot(mapping = aes(x = year, 
-                       y = MinPen_rep_single)) +
-  geom_line(mapping = aes(group = country), color = "grey70") +
-  geom_smooth(method = "loess") +
-  labs(x = "Year",
-       y = "Minimum Pension Single Replacement Rate",
-       title = "Minimum Pension Family Replacement Rate for G7 Countries Over Time")
-
-cwed |>
-  filter(country %in% c("United States", "United Kingdom", "Italy", "Japan", "Germany", "France", "Canada")) |>
-  ggplot(mapping = aes(x = year, 
-                       y = MinPen_rep_family)) +
-  geom_line(mapping = aes(group = country), color = "grey70") +
-  geom_smooth(method = "loess") +
-  labs(x = "Year",
-       y = "Minimum Pension Family Replacement Rate",
-       title = "Minimum Pension Family Replacement Rate for G7 Countries Over Time")
-```
-
-```{r}
-cwed |>
-  filter(country %in% c("United States", "United Kingdom", "Italy", "Japan", "Germany", "France", "Canada")) |>
-  ggplot(mapping = aes(x = year, 
-                       y = UI_cov)) +
-  geom_line(mapping = aes(group = country), color = "grey70") +
-  geom_smooth(method = "loess") +
-  labs(x = "Year",
-       y = "Percentage of the Labor Force Insured for Unemployment Risk",
-       title = "Unemployment Insurance Coverage for G7 Countries Over Time")
-
-cwed |>
-  filter(country %in% c("United States", "United Kingdom", "Italy", "Japan", "Germany", "France", "Canada")) |>
-  ggplot(mapping = aes(x = year, 
-                       y = SI_cov)) +
-  geom_line(mapping = aes(group = country), color = "grey70") +
-  geom_smooth(method = "loess") +
-  labs(x = "Year",
-       y = "Percentage of the Labor Force with Sickpay Insurance",
-       title = "Sickness Insurance Coverage for G7 Countries Over Time")
-
-cwed |>
-  filter(country %in% c("United States", "United Kingdom", "Italy", "Japan", "Germany", "France", "Canada")) |>
-  ggplot(mapping = aes(x = year, 
-                       y = pen_cov)) +
-  geom_line(mapping = aes(group = country), color = "grey70") +
-  geom_smooth(method = "loess") +
-  labs(x = "Year",
-       y = "Portion of Those Above Official Retirement Age Who Are in Receipt of a Public Pension",
-       title = "Pensions Coverage for G7 Countries Over Time")
-```
-
-
-## Milestone 4
-
-```{r}
-cwed |>
-  filter(country %in% c("United States", "United Kingdom", "Italy", "Japan", "Germany", "France", "Canada")) |>
-  ggplot() +
-  geom_smooth(mapping = aes(x = UI_rep_single, 
+ggplot() + 
+  geom_smooth(data = cwed, mapping = aes(x = UI_rep_single, 
                        y = life_exp), method = "lm")
 
-cwed |>
-  filter(country %in% c("United States", "United Kingdom", "Italy", "Japan", "Germany", "France", "Canada")) |>
-  ggplot() +
-  geom_smooth(mapping = aes(x = SI_rep_single, 
+ggplot() + 
+  geom_smooth(data = cwed, mapping = aes(x = SI_rep_single, 
                        y = life_exp), method = "lm")
 
-cwed |>
-  filter(country %in% c("United States", "United Kingdom", "Italy", "Japan", "Germany", "France", "Canada")) |>
-  ggplot() +
-  geom_smooth(mapping = aes(x = MinPen_rep_single, 
+ggplot() + 
+  geom_smooth(data = cwed, mapping = aes(x = MinPen_rep_single, 
                        y = life_exp), method = "lm")
 
 ```
 
-Comparing the relationship between the replacement rates of the three main types of insurance and life expectancy highlights which relationships are most statistically significant. Since the upper bound of the left side of the confidence interval in the Unemployment Insurance replacement rate and life expectancy graph is lower than the lower bound of the right side, we can conclude that the relationship is statistically significant. The relationship between the Sickness Insurance replacement rate and life expectancy is statistically insignificant because the smoothed line appears flat and the bounds on either side of the confidence interval uniform. The relationship between the Minimum Pension replacement rate and life expectancy is statistically significant (more so than with Unemployment Insurance) because the upper bound of the left side of the confidence interval is lower than the lower bound of the right side. 
+The bivariate plots suggests that there exists positive relationships between single replacement rates of the three major types of insurance and life expectancy at the age of 65. Regression analyses will give a better insight on this relationship.
+
+
+```{r}
+## Regression 1
+m.lm1 <- lm(data = cwed, life_exp ~ UI_rep_single + SI_rep_single + MinPen_rep_single + as.factor(year) + country)
+
+summary(m.lm1)$coefficients[1:4,] |>
+  knitr::kable(digits = 2)
+```
+The following regression is a multivariate model to analyze the relationship between the three main explanatory variables and the outcome variable with year and country fixed effects included but not shown in the final table.
+
+
+```{r}
+## Regression 2
+m.lm2 <- lm(life_exp ~ UI_rep_single + UI_rep_family + SI_rep_single + SI_rep_family + MinPen_rep_single + MinPen_rep_family + pen_rep_single + pen_rep_family + UI_cov + UI_wait + SI_cov + SI_wait + pen_cov + pen_ratio + UI_qual + SI_qual + pen_qual + wage + country + as.factor(year), data = cwed)
+
+summary(m.lm2)$coefficients[1:19,] |>
+  knitr::kable(digits = 2)
+```
+The following regression is a multivariate model to analyze the relationship between the three main explanatory variables and the outcome variable controlling for other features of the insurance programs. Year and country fixed effects are included but not shown in the final table.
+
+Each one unit increase in SI_rep_single leads to a 2.085e+00 increase in life expectancy when holding all other variables constant. The relationship is statistically significant. 
+
+(define one unit increase)
+
+## Conclusion
+
+- shortcomings
+- if i had unlimited resources what would I do to improve: unethical randomized trial (explain importance of randomization for eliminating confounding variables)
+- what are potential confounders
 
