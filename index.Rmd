@@ -9,11 +9,13 @@ output:
 
 ```{r}
 ## Packages
+
 library(tidyverse)
 library(ggplot2)
 library(infer)
 library(dplyr)
 library(broom)
+library(modelsummary)
 
 cwed <- read_csv("cwed.csv")
 cwed
@@ -21,6 +23,7 @@ cwed
 
 ```{r}
 ## Data Simplification
+
 cwed <- cwed |>
   rename(country = COUNTRY,
          year = YEAR,
@@ -51,45 +54,63 @@ cwed <- cwed |>
   mutate(life_exp = life_exp + 65)
 ```
 
-
 ## Introduction
-Welfare programs have long been controversial. Proponents argue that public insurance and pensions help the elderly and those down on their luck. They believe that the higher welfare benefits for the unemployed, sick, and elderly provide a much-needed economic cushion that allows recipients to spend more on essentials and improve their well-being. This project seeks to bring clarity to this issue by exploring how welfare benefits can affect people's lives. Specifically, the project focuses on how the size of benefits for different types of insurance impacts life expectancy. It asks: Does the single replacement rate (the percentage of an individual's income given as insurance benefits) for Unemployment Insurance, Sickness Insurance, and Pensions affect life expectancy at the age of 65? This question may help frame the debate around welfare benefits, an issue that affects, in one way or another, hundreds of millions of people across the globe.
+
+Welfare programs have long been controversial. Proponents argue that public insurance and pensions help the elderly and those down on their luck. They believe that the higher welfare benefits for the unemployed, sick, and elderly provide a much-needed economic cushion that allows recipients to spend more on essentials and improve their well-being. Opponents believe that higher welfare benefits discourage work and make recipients worse off. This project seeks to bring clarity to this issue by exploring how welfare benefits can affect people's lives. Specifically, the project focuses on how the size of benefits for different types of insurance impacts life expectancy. It asks: Does the single replacement rate (the percentage of an individual's income given as insurance benefits) for Unemployment Insurance, Sickness Insurance, and Pensions affect life expectancy at the age of 65? This question may help frame the debate around welfare benefits, an issue that affects, in one way or another, hundreds of millions of people across the globe.
 
 ## Data and Research Design
-Data for this project is used from The Comparative Welfare Entitlements Dataset (CWED), which has data on various institutional features of social insurance programs in 33 countries spanning much of the post-war period. The three social programs in the CWED data are Unemployment Insurance, Sickness Insurance, and Pensions.
+
+Data for this project is used from The Comparative Welfare Entitlements Dataset (CWED), which has data on various institutional features of social insurance programs in 33 countries from 1970 to 2011. The three social programs in the CWED data are Unemployment Insurance, Sickness Insurance, and Pensions.
 
 The analyses covers the following features for Unemployment Insurance and Sickness Insurance:
 - Single Replacement Rate: the percentage of an individual's annual employment income that is given as benefits
+
 - Family Replacement Rate: the percentage of a family's annual employment income that is given as benefits
+
 - Waiting days: Days one must wait to start receiving benefit after becoming unemployed/sick
+
 - Qualification period: Weeks of insurance needed to qualify for benefit
+
 - Duration: Weeks of benefit entitlement excluding times of means‐tested assistance or long‐term disability/invalidity pensions
+
 - Coverage: Percentage of the labor force insured for unemployment risk/sick-pay insurance
 
 The analyses covers the following features for Pensions:
 - Minimum Pension Single Replacement Rate: the percentage of an individual's annual employment income that is given as benefits
+
 - Minimum Pension Family Replacement Rate: the percentage of a family's annual employment income that is given as benefits
+
 - Standard Pension Single Replacement Rate: the percentage of an individual's annual employment income that is given as benefits
+
 - Standard Pension Family Replacement Rate: the percentage of a family's annual employment income that is given as benefits
-- Coverage/Take‐up: Portion of those above official retirement age who are in receipt
-of a public pension
+
+- Coverage/Take‐up: Portion of those above official retirement age who are in receipt of a public pension
+
 - “Standard” number of years of pension insurance to be considered fully covered
+
 - The ratio of employee pension contributions to employer and employee pension contributions
+
 - Years of earnings used in the pensionable wage calculation
 
-The research design is time series cross sectional, as it observes 1,386 samples across 33 countries from 1970 to 2011 to analyze the relationship between the main explanatory variables (unemployment, sickness, and pension replacement rates), and the outcome variable (life expectancy at age 65).
+The research design is time series cross sectional, as it observes 1,386 samples across 33 countries from 1970 to 2011 to analyze the relationship between the main explanatory variables (unemployment, sickness, and standard pension single replacement rates), and the outcome variable (life expectancy at age 65).
 
 This is the distribution of the outcome variable for all samples:
+
 ```{r}
+## Outcome Variable Distribution
+
 ggplot(data = cwed, mapping = aes(x = life_exp)) +
   geom_histogram(aes(y = ..density..)) +
-  labs(x = "Life Expectanct at Age 65",
+  labs(x = "Life Expectancy at Age 65",
        y = "Density",
        title = "Distribution of Life Expectancy")
 ```
 
 This is how the outcome variable changed over time in each country. The blue line represent the line of best fit for the aggregate data.
+
 ```{r}
+##Outcome Variable Over Time
+
 ggplot(data = cwed, mapping = aes(x = year,
                        y = life_exp)) +
   geom_line(mapping = aes(group = country), color = "grey70") +
@@ -113,7 +134,7 @@ ggplot() +
                        y = life_exp), method = "lm")
 
 ggplot() + 
-  geom_smooth(data = cwed, mapping = aes(x = MinPen_rep_single, 
+  geom_smooth(data = cwed, mapping = aes(x = pen_rep_single, 
                        y = life_exp), method = "lm")
 
 ```
@@ -122,31 +143,96 @@ The bivariate plots suggests that there exists positive relationships between si
 
 
 ```{r}
-## Regression 1
-m.lm1 <- lm(data = cwed, life_exp ~ UI_rep_single + SI_rep_single + MinPen_rep_single + as.factor(year) + country)
+## Multivariate Regression 1
 
-summary(m.lm1)$coefficients[1:4,] |>
-  knitr::kable(digits = 2)
+m.lm1 <- list("Reggresion 1" = 
+                 lm(data = cwed, life_exp ~ UI_rep_single + SI_rep_single + pen_rep_single + as.factor(year) + country))
+
+cm <- c("UI_rep_single" = "Unemployment Insurance Single Replacement Rate",
+        "SI_rep_single" = "Sickness Insurance Single Replacement Rate",
+        "pen_rep_single" = "Standard Pension Single Replacement Rate")
+
+modelsummary(m.lm1, coef_map = cm, stars = TRUE)
 ```
-The following regression is a multivariate model to analyze the relationship between the three main explanatory variables and the outcome variable with year and country fixed effects included but not shown in the final table.
 
+The following regression is a multivariate model to analyze the relationship between the three main explanatory variables and the outcome variable with year and country fixed effects included but not shown in the final table. This regression shows that on average while controlling for the other variables:
+
+Each one percent increase in the unemployment insurance single replacement rate (UI_rep_single) leads to a 1.238 increase in life expectancy (life_exp). 
+
+Each one percent increase in the sickness insurance single replacement rate (SI_rep_single) leads to a 0.151 decrease in life expectancy (life_exp).
+
+Each one percent increase in the pension insurance single replacement rate (pen_rep_single) leads to a 0.822 increase in life expectancy (life_exp).
+
+At the test level $\alpha = 0.05$,
+the relationship between UI_rep_single and life_exp is very statistically significant as it has a p-value of 0. 
+The relationship between SI_rep_single and life_exp is not statistically significant as it has a p-value of 0.54.
+The relationship between pen_rep_single and life_exp is statistically significant as it has a p-value of 0.0078. 
+
+The p-value shows that there is a near 100% probability that the estimated association between UI_rep_single and life_exp is not due to random chance, with a lower probability for pen_rep_single, and even lower for SI_rep_single.
+
+The standard error values measures the magnitude of the standard deviation of the sampling distribution from the population. In this case, UI_rep_single has a SE of 0.222, SI_rep_single is 0.247, and pen_rep_single is 0.308. Unemployment insurance thus has the lowest standard deviation and is most representative of the total population, followed by sickness insurance then pensions.
+
+The Adjusted R-squared value of the regression is 0.948, which shows that the model explains ~95% of the variation in the variable life_exp.
 
 ```{r}
-## Regression 2
-m.lm2 <- lm(life_exp ~ UI_rep_single + UI_rep_family + SI_rep_single + SI_rep_family + MinPen_rep_single + MinPen_rep_family + pen_rep_single + pen_rep_family + UI_cov + UI_wait + SI_cov + SI_wait + pen_cov + pen_ratio + UI_qual + SI_qual + pen_qual + wage + country + as.factor(year), data = cwed)
+## Multivariate Regression 2
 
-summary(m.lm2)$coefficients[1:19,] |>
-  knitr::kable(digits = 2)
+m.lm2 <- list("Reggresion 2" = 
+                 lm(data = cwed, life_exp ~ UI_rep_single + SI_rep_single + pen_rep_single + MinPen_rep_single + UI_rep_family + SI_rep_family + pen_rep_family + MinPen_rep_family + UI_cov + SI_cov + pen_cov + UI_wait + SI_wait + UI_qual + SI_qual + pen_qual + pen_ratio + wage + country + as.factor(year)))
+
+cm2 <- c("UI_rep_single" = "Unemployment Insurance Single Replacement Rate",
+        "SI_rep_single" = "Sickness Insurance Single Replacement Rate",
+        "pen_rep_single" = "Standard Pension Single Replacement Rate",
+        "MinPen_rep_single" = "Minimum Pension Single Replacement Rate",
+        "UI_rep_family" = "Unemployment Insurance Family Replacement Rate",
+        "SI_rep_family" = "Sickness Insurance Family Replacement Rate",
+        "pen_rep_family" = "Standard Pension Family Replacement Rate",
+        "MinPen_rep_family" = "Minimum Pension Family Replacement Rate",
+        "UI_cov" = "Unemployment Insurance Coverage",
+        "SI_cov" = "Sickness Insurance Coverage",
+        "pen_cov" = "Pension Coverage",
+        "UI_wait" = "Unemployment Insurance Wait Period",
+        "SI_wait" = "Sickness Insurance Wait Period",
+        "UI_qual" = "Unemployment Insurance Qualification Period",
+        "SI_qual" = "Sickness Insurance Qualification Period",
+        "pen_qual" = "Years of Pension to be Fully Covered",
+        "pen_ratio" = "Pension Ratio of Employee to Employer and Employee Contributions",
+        "wage" = "Average Production Worker Wage")
+
+modelsummary(m.lm2, coef_map = cm2, stars = TRUE)
 ```
-The following regression is a multivariate model to analyze the relationship between the three main explanatory variables and the outcome variable controlling for other features of the insurance programs. Year and country fixed effects are included but not shown in the final table.
 
-Each one unit increase in SI_rep_single leads to a 2.085e+00 increase in life expectancy when holding all other variables constant. The relationship is statistically significant. 
+The following regression is a multivariate model to analyze the relationship between the three main explanatory variables and the outcome variable controlling for other features of the insurance programs. Year and country fixed effects are included but not shown in the final table.This regression shows that on average while controlling for the other variables:
 
-(define one unit increase)
+Each one percent increase in the unemployment insurance single replacement rate (UI_rep_single) leads to a -0.254 decrease in life expectancy (life_exp), markedly less than the 1.238 increase of the previous regression.
+
+Each one percent increase in the sickness insurance single replacement rate (SI_rep_single) leads to a 1.447 increase in life expectancy (life_exp), markedly more than the 0.151 decrease of the previous regression.
+
+Each one percent increase in the pension insurance single replacement rate (pen_rep_single) leads to a 0.669 decrease in life expectancy (life_exp), markedly less than the 0.822 increase of the previous regression.
+
+At the test level $\alpha = 0.05$,
+the relationship between UI_rep_single and life_exp is not statistically significant as it has a p-value of 0.678, compared with the very statistically significant p-value of 0 of the previous regression.
+The relationship between SI_rep_single and life_exp is statistically significant as it has a p-value of 0.00334, compared with the not statistically significant p-value of 0.54. of the previous regression.
+The relationship between pen_rep_single and life_exp is not statistically significant as it has a p-value of 0.2059, compared with the  statistically significant p-value of 0.0078 of the previous regression.
+
+The p-value shows that there is a high probability that the estimated association between SI_rep_single and life_exp is not due to random chance, and that there is a low probability for UI_rep_single and pen_rep_single.
+
+The standard error values measures the magnitude of the standard deviation of the sampling distribution from the population. In this case, UI_rep_single has a SE of 0.613 (previously 0.222), SI_rep_single is 0.490 (previously 0.247), and pen_rep_single is 0.528 (previously 0.308). Sickness insurance thus has the lowest standard deviation and is most representative of the total population, followed by pensions then unemployment insurance. In this model, all explanatory variables are less representative of the total population.
+
+The Adjusted R-squared value of the regression is 0.9767 (previously 0.948) which shows that the model explains ~98% of the variation in the variable life_exp. Thus, including the other insurance program features in the regression allows this model to explain ~3% more of the variation in life_exp than before.
+
+The change in statistical significance and coefficient estimates for the main explanatory variables from the last regression indicates that the other variables included in this regression impact how the explanatory variables impact the outcome variable. The addition of such variables also help solidify the relationship between the explanatory and outcome variables as seen through the Adjusted R-squared increase. It is important to look at Adjusted R-squared because it takes the number of variables into account and penalizes variables that do not impact outcome. Thus, it is a better fit for the data to look at the R-squared when it is adjusted.
 
 ## Conclusion
 
-- shortcomings
-- if i had unlimited resources what would I do to improve: unethical randomized trial (explain importance of randomization for eliminating confounding variables)
-- what are potential confounders
+The main explanatory variables are not randomly assigned and are thus not treatment variables that causally impact life expectancy. The second regression model is a better fit for the data as seen by the adjusted R-squared. There, only SI_rep_single has a statistically significant relationship with life_exp when holding controlling for all other features of the various insurance programs. That positive correlation is not causal, especially because of the presence of confounding variables.
+
+The main confounders that invalidate causality are the social determinates of health. These include socioeconomic status, stress levels, and racial disparities (which could be measured by the Gini coefficient). All these variables impact life expectancy, and unlike other variables such as GDP per capita, cannot be controlled by looking at samples across 33 countries and 42 years. These confounders are excluded from the models due to data unavailability, so causality between the explanatory variables and the outcome variable cannot be established.
+
+This project has multiple shortcomings due to limited data besides the aforementioned confounding bias. The issue of directionality is central as the explanatory variables clearly had some relation to the outcome variable, although the effect itself is not clear. 
+
+If the study had unlimited resources, these shortcomings could be addressed by conducting a randomized controlled trial to control each explanatory variable over a large sample size. This would entail recording how long people live when giving them varying degrees of insurance benefits (higher and lower replacement rates). The sampled groups would need to be randomized as to eliminate bias in treatment assignment because each group would be comparable. 
+
+While such a study would be ideal for testing causality for the relationship between replacement rates and life expectancy, it would be highly unethical. Testing how long people live by adding or removing welfare benefits is clearly immoral as it allows some people to potentially die earlier than they would have just to clarify data. Thus, such a randomized controlled trial would not be possible. Available data may not always be perfect for drawing concrete conclusions, but that may be for good reason.
+
 

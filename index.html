@@ -1473,6 +1473,8 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
   <!--/radix_placeholder_distill-->
   <script src="index_files/header-attrs-2.16/header-attrs.js"></script>
+  <script src="index_files/kePrint-0.0.1/kePrint.js"></script>
+  <link href="index_files/lightable-0.0.1/lightable.css" rel="stylesheet" />
   <script src="index_files/jquery-3.6.0/jquery-3.6.0.min.js"></script>
   <script src="index_files/popper-2.6.0/popper.min.js"></script>
   <link href="index_files/tippy-6.2.7/tippy.css" rel="stylesheet" />
@@ -1520,11 +1522,13 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>## Packages</span></span>
+<span></span>
 <span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://tidyverse.tidyverse.org'>tidyverse</a></span><span class='op'>)</span></span>
 <span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span></span>
 <span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/tidymodels/infer'>infer</a></span><span class='op'>)</span></span>
 <span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://dplyr.tidyverse.org'>dplyr</a></span><span class='op'>)</span></span>
 <span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://broom.tidymodels.org/'>broom</a></span><span class='op'>)</span></span>
+<span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://vincentarelbundock.github.io/modelsummary/'>modelsummary</a></span><span class='op'>)</span></span>
 <span></span>
 <span><span class='va'>cwed</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://readr.tidyverse.org/reference/read_delim.html'>read_csv</a></span><span class='op'>(</span><span class='st'>"cwed.csv"</span><span class='op'>)</span></span>
 <span><span class='va'>cwed</span></span></code></pre>
@@ -1553,6 +1557,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>## Data Simplification</span></span>
+<span></span>
 <span><span class='va'>cwed</span> <span class='op'>&lt;-</span> <span class='va'>cwed</span> <span class='op'>|&gt;</span></span>
 <span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/rename.html'>rename</a></span><span class='op'>(</span>country <span class='op'>=</span> <span class='va'>COUNTRY</span>,</span>
 <span>         year <span class='op'>=</span> <span class='va'>YEAR</span>,</span>
@@ -1584,42 +1589,49 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </div>
 </div>
 <h2 id="introduction">Introduction</h2>
-<p>Welfare programs have long been controversial. Proponents argue that public insurance and pensions help the elderly and those down on their luck. They believe that the higher welfare benefits for the unemployed, sick, and elderly provide a much-needed economic cushion that allows recipients to spend more on essentials and improve their well-being. This project seeks to bring clarity to this issue by exploring how welfare benefits can affect people’s lives. Specifically, the project focuses on how the size of benefits for different types of insurance impacts life expectancy. It asks: Does the single replacement rate (the percentage of an individual’s income given as insurance benefits) for Unemployment Insurance, Sickness Insurance, and Pensions affect life expectancy at the age of 65? This question may help frame the debate around welfare benefits, an issue that affects, in one way or another, hundreds of millions of people across the globe.</p>
+<p>Welfare programs have long been controversial. Proponents argue that public insurance and pensions help the elderly and those down on their luck. They believe that the higher welfare benefits for the unemployed, sick, and elderly provide a much-needed economic cushion that allows recipients to spend more on essentials and improve their well-being. Opponents believe that higher welfare benefits discourage work and make recipients worse off. This project seeks to bring clarity to this issue by exploring how welfare benefits can affect people’s lives. Specifically, the project focuses on how the size of benefits for different types of insurance impacts life expectancy. It asks: Does the single replacement rate (the percentage of an individual’s income given as insurance benefits) for Unemployment Insurance, Sickness Insurance, and Pensions affect life expectancy at the age of 65? This question may help frame the debate around welfare benefits, an issue that affects, in one way or another, hundreds of millions of people across the globe.</p>
 <h2 id="data-and-research-design">Data and Research Design</h2>
-<p>Data for this project is used from The Comparative Welfare Entitlements Dataset (CWED), which has data on various institutional features of social insurance programs in 33 countries spanning much of the post-war period. The three social programs in the CWED data are Unemployment Insurance, Sickness Insurance, and Pensions.</p>
+<p>Data for this project is used from The Comparative Welfare Entitlements Dataset (CWED), which has data on various institutional features of social insurance programs in 33 countries from 1970 to 2011. The three social programs in the CWED data are Unemployment Insurance, Sickness Insurance, and Pensions.</p>
 <p>The analyses covers the following features for Unemployment Insurance and Sickness Insurance:
-- Single Replacement Rate: the percentage of an individual’s annual employment income that is given as benefits
-- Family Replacement Rate: the percentage of a family’s annual employment income that is given as benefits
-- Waiting days: Days one must wait to start receiving benefit after becoming unemployed/sick
-- Qualification period: Weeks of insurance needed to qualify for benefit
-- Duration: Weeks of benefit entitlement excluding times of means‐tested assistance or long‐term disability/invalidity pensions
-- Coverage: Percentage of the labor force insured for unemployment risk/sick-pay insurance</p>
+- Single Replacement Rate: the percentage of an individual’s annual employment income that is given as benefits</p>
+<ul>
+<li><p>Family Replacement Rate: the percentage of a family’s annual employment income that is given as benefits</p></li>
+<li><p>Waiting days: Days one must wait to start receiving benefit after becoming unemployed/sick</p></li>
+<li><p>Qualification period: Weeks of insurance needed to qualify for benefit</p></li>
+<li><p>Duration: Weeks of benefit entitlement excluding times of means‐tested assistance or long‐term disability/invalidity pensions</p></li>
+<li><p>Coverage: Percentage of the labor force insured for unemployment risk/sick-pay insurance</p></li>
+</ul>
 <p>The analyses covers the following features for Pensions:
-- Minimum Pension Single Replacement Rate: the percentage of an individual’s annual employment income that is given as benefits
-- Minimum Pension Family Replacement Rate: the percentage of a family’s annual employment income that is given as benefits
-- Standard Pension Single Replacement Rate: the percentage of an individual’s annual employment income that is given as benefits
-- Standard Pension Family Replacement Rate: the percentage of a family’s annual employment income that is given as benefits
-- Coverage/Take‐up: Portion of those above official retirement age who are in receipt
-of a public pension
-- “Standard” number of years of pension insurance to be considered fully covered
-- The ratio of employee pension contributions to employer and employee pension contributions
-- Years of earnings used in the pensionable wage calculation</p>
-<p>The research design is time series cross sectional, as it observes 1,386 samples across 33 countries from 1970 to 2011 to analyze the relationship between the main explanatory variables (unemployment, sickness, and pension replacement rates), and the outcome variable (life expectancy at age 65).</p>
-This is the distribution of the outcome variable for all samples:
+- Minimum Pension Single Replacement Rate: the percentage of an individual’s annual employment income that is given as benefits</p>
+<ul>
+<li><p>Minimum Pension Family Replacement Rate: the percentage of a family’s annual employment income that is given as benefits</p></li>
+<li><p>Standard Pension Single Replacement Rate: the percentage of an individual’s annual employment income that is given as benefits</p></li>
+<li><p>Standard Pension Family Replacement Rate: the percentage of a family’s annual employment income that is given as benefits</p></li>
+<li><p>Coverage/Take‐up: Portion of those above official retirement age who are in receipt of a public pension</p></li>
+<li><p>“Standard” number of years of pension insurance to be considered fully covered</p></li>
+<li><p>The ratio of employee pension contributions to employer and employee pension contributions</p></li>
+<li><p>Years of earnings used in the pensionable wage calculation</p></li>
+</ul>
+<p>The research design is time series cross sectional, as it observes 1,386 samples across 33 countries from 1970 to 2011 to analyze the relationship between the main explanatory variables (unemployment, sickness, and standard pension single replacement rates), and the outcome variable (life expectancy at age 65).</p>
+<p>This is the distribution of the outcome variable for all samples:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>cwed</span>, mapping <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>life_exp</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>## Outcome Variable Distribution</span></span>
+<span></span>
+<span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>cwed</span>, mapping <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>life_exp</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
 <span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_histogram.html'>geom_histogram</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>y <span class='op'>=</span> <span class='va'>..density..</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
-<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"Life Expectanct at Age 65"</span>,</span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='st'>"Life Expectancy at Age 65"</span>,</span>
 <span>       y <span class='op'>=</span> <span class='st'>"Density"</span>,</span>
 <span>       title <span class='op'>=</span> <span class='st'>"Distribution of Life Expectancy"</span><span class='op'>)</span></span></code></pre>
 </div>
 <p><img src="index_files/figure-html5/unnamed-chunk-3-1.png" width="624" /></p>
 </div>
-This is how the outcome variable changed over time in each country. The blue line represent the line of best fit for the aggregate data.
+<p>This is how the outcome variable changed over time in each country. The blue line represent the line of best fit for the aggregate data.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>cwed</span>, mapping <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>year</span>,</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>##Outcome Variable Over Time</span></span>
+<span></span>
+<span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>cwed</span>, mapping <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>year</span>,</span>
 <span>                       y <span class='op'>=</span> <span class='va'>life_exp</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
 <span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line</a></span><span class='op'>(</span>mapping <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>group <span class='op'>=</span> <span class='va'>country</span><span class='op'>)</span>, color <span class='op'>=</span> <span class='st'>"grey70"</span><span class='op'>)</span> <span class='op'>+</span></span>
 <span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_smooth.html'>geom_smooth</a></span><span class='op'>(</span>method <span class='op'>=</span> <span class='st'>"loess"</span><span class='op'>)</span> <span class='op'>+</span></span>
@@ -1647,7 +1659,7 @@ This is how the outcome variable changed over time in each country. The blue lin
 <img src="index_files/figure-html5/unnamed-chunk-5-2.png" width="624" />
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span> </span>
-<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_smooth.html'>geom_smooth</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>cwed</span>, mapping <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>MinPen_rep_single</span>, </span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_smooth.html'>geom_smooth</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>cwed</span>, mapping <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>pen_rep_single</span>, </span>
 <span>                       y <span class='op'>=</span> <span class='va'>life_exp</span><span class='op'>)</span>, method <span class='op'>=</span> <span class='st'>"lm"</span><span class='op'>)</span></span></code></pre>
 </div>
 <p><img src="index_files/figure-html5/unnamed-chunk-5-3.png" width="624" /></p>
@@ -1655,219 +1667,543 @@ This is how the outcome variable changed over time in each country. The blue lin
 <p>The bivariate plots suggests that there exists positive relationships between single replacement rates of the three major types of insurance and life expectancy at the age of 65. Regression analyses will give a better insight on this relationship.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>## Regression 1</span></span>
-<span><span class='va'>m.lm1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>cwed</span>, <span class='va'>life_exp</span> <span class='op'>~</span> <span class='va'>UI_rep_single</span> <span class='op'>+</span> <span class='va'>SI_rep_single</span> <span class='op'>+</span> <span class='va'>MinPen_rep_single</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span><span class='op'>(</span><span class='va'>year</span><span class='op'>)</span> <span class='op'>+</span> <span class='va'>country</span><span class='op'>)</span></span>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>## Multivariate Regression 1</span></span>
 <span></span>
-<span><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m.lm1</span><span class='op'>)</span><span class='op'>$</span><span class='va'>coefficients</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>4</span>,<span class='op'>]</span> <span class='op'>|&gt;</span></span>
-<span>  <span class='fu'>knitr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/knitr/man/kable.html'>kable</a></span><span class='op'>(</span>digits <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span></span></code></pre>
+<span><span class='va'>m.lm1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='st'>"Reggresion 1"</span> <span class='op'>=</span> </span>
+<span>                 <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>cwed</span>, <span class='va'>life_exp</span> <span class='op'>~</span> <span class='va'>UI_rep_single</span> <span class='op'>+</span> <span class='va'>SI_rep_single</span> <span class='op'>+</span> <span class='va'>pen_rep_single</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span><span class='op'>(</span><span class='va'>year</span><span class='op'>)</span> <span class='op'>+</span> <span class='va'>country</span><span class='op'>)</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='va'>cm</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"UI_rep_single"</span> <span class='op'>=</span> <span class='st'>"Unemployment Insurance Single Replacement Rate"</span>,</span>
+<span>        <span class='st'>"SI_rep_single"</span> <span class='op'>=</span> <span class='st'>"Sickness Insurance Single Replacement Rate"</span>,</span>
+<span>        <span class='st'>"pen_rep_single"</span> <span class='op'>=</span> <span class='st'>"Standard Pension Single Replacement Rate"</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='fu'><a href='https://vincentarelbundock.github.io/modelsummary/reference/modelsummary.html'>modelsummary</a></span><span class='op'>(</span><span class='va'>m.lm1</span>, coef_map <span class='op'>=</span> <span class='va'>cm</span>, stars <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></span></code></pre>
 </div>
-<table>
+<table style="NAborder-bottom: 0; width: auto !important; margin-left: auto; margin-right: auto;" class="table">
 <thead>
-<tr class="header">
-<th style="text-align: left;"></th>
-<th style="text-align: right;">Estimate</th>
-<th style="text-align: right;">Std. Error</th>
-<th style="text-align: right;">t value</th>
-<th style="text-align: right;">Pr(&gt;|t|)</th>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:center;">
+Reggresion 1
+</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">79.58</td>
-<td style="text-align: right;">0.14</td>
-<td style="text-align: right;">555.12</td>
-<td style="text-align: right;">0.00</td>
+<tr>
+<td style="text-align:left;">
+Unemployment Insurance Single Replacement Rate
+</td>
+<td style="text-align:center;">
+1.238***
+</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">UI_rep_single</td>
-<td style="text-align: right;">1.15</td>
-<td style="text-align: right;">0.17</td>
-<td style="text-align: right;">6.70</td>
-<td style="text-align: right;">0.00</td>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:center;">
+(0.223)
+</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">SI_rep_single</td>
-<td style="text-align: right;">-0.26</td>
-<td style="text-align: right;">0.22</td>
-<td style="text-align: right;">-1.17</td>
-<td style="text-align: right;">0.24</td>
+<tr>
+<td style="text-align:left;">
+Sickness Insurance Single Replacement Rate
+</td>
+<td style="text-align:center;">
+−0.151
+</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">MinPen_rep_single</td>
-<td style="text-align: right;">0.90</td>
-<td style="text-align: right;">0.27</td>
-<td style="text-align: right;">3.33</td>
-<td style="text-align: right;">0.00</td>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:center;">
+(0.247)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Standard Pension Single Replacement Rate
+</td>
+<td style="text-align:center;">
+0.822**
+</td>
+</tr>
+<tr>
+<td style="text-align:left;box-shadow: 0px 1px">
+</td>
+<td style="text-align:center;box-shadow: 0px 1px">
+(0.308)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Num.Obs.
+</td>
+<td style="text-align:center;">
+724
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+R2
+</td>
+<td style="text-align:center;">
+0.953
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+R2 Adj.
+</td>
+<td style="text-align:center;">
+0.948
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+AIC
+</td>
+<td style="text-align:center;">
+718.1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BIC
+</td>
+<td style="text-align:center;">
+1016.1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Log.Lik.
+</td>
+<td style="text-align:center;">
+−294.031
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+RMSE
+</td>
+<td style="text-align:center;">
+0.36
+</td>
 </tr>
 </tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; " colspan="100%">
+<sup></sup> + p &lt; 0.1, * p &lt; 0.05, ** p &lt; 0.01, *** p &lt; 0.001
+</td>
+</tr>
+</tfoot>
 </table>
 </div>
-<p>The following regression is a multivariate model to analyze the relationship between the three main explanatory variables and the outcome variable with year and country fixed effects included but not shown in the final table.</p>
+<p>The following regression is a multivariate model to analyze the relationship between the three main explanatory variables and the outcome variable with year and country fixed effects included but not shown in the final table. This regression shows that on average while controlling for the other variables:</p>
+<p>Each one percent increase in the unemployment insurance single replacement rate (UI_rep_single) leads to a 1.238 increase in life expectancy (life_exp).</p>
+<p>Each one percent increase in the sickness insurance single replacement rate (SI_rep_single) leads to a 0.151 decrease in life expectancy (life_exp).</p>
+<p>Each one percent increase in the pension insurance single replacement rate (pen_rep_single) leads to a 0.822 increase in life expectancy (life_exp).</p>
+<p>At the test level <span class="math inline">\(\alpha = 0.05\)</span>,
+the relationship between UI_rep_single and life_exp is very statistically significant as it has a p-value of 0.
+The relationship between SI_rep_single and life_exp is not statistically significant as it has a p-value of 0.54.
+The relationship between pen_rep_single and life_exp is statistically significant as it has a p-value of 0.0078.</p>
+<p>The p-value shows that there is a near 100% probability that the estimated association between UI_rep_single and life_exp is not due to random chance, with a lower probability for pen_rep_single, and even lower for SI_rep_single.</p>
+<p>The standard error values measures the magnitude of the standard deviation of the sampling distribution from the population. In this case, UI_rep_single has a SE of 0.222, SI_rep_single is 0.247, and pen_rep_single is 0.308. Unemployment insurance thus has the lowest standard deviation and is most representative of the total population, followed by sickness insurance then pensions.</p>
+<p>The Adjusted R-squared value of the regression is 0.948, which shows that the model explains ~95% of the variation in the variable life_exp.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>## Regression 2</span></span>
-<span><span class='va'>m.lm2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span><span class='va'>life_exp</span> <span class='op'>~</span> <span class='va'>UI_rep_single</span> <span class='op'>+</span> <span class='va'>UI_rep_family</span> <span class='op'>+</span> <span class='va'>SI_rep_single</span> <span class='op'>+</span> <span class='va'>SI_rep_family</span> <span class='op'>+</span> <span class='va'>MinPen_rep_single</span> <span class='op'>+</span> <span class='va'>MinPen_rep_family</span> <span class='op'>+</span> <span class='va'>pen_rep_single</span> <span class='op'>+</span> <span class='va'>pen_rep_family</span> <span class='op'>+</span> <span class='va'>UI_cov</span> <span class='op'>+</span> <span class='va'>UI_wait</span> <span class='op'>+</span> <span class='va'>SI_cov</span> <span class='op'>+</span> <span class='va'>SI_wait</span> <span class='op'>+</span> <span class='va'>pen_cov</span> <span class='op'>+</span> <span class='va'>pen_ratio</span> <span class='op'>+</span> <span class='va'>UI_qual</span> <span class='op'>+</span> <span class='va'>SI_qual</span> <span class='op'>+</span> <span class='va'>pen_qual</span> <span class='op'>+</span> <span class='va'>wage</span> <span class='op'>+</span> <span class='va'>country</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span><span class='op'>(</span><span class='va'>year</span><span class='op'>)</span>, data <span class='op'>=</span> <span class='va'>cwed</span><span class='op'>)</span></span>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>## Multivariate Regression 2</span></span>
 <span></span>
-<span><span class='fu'><a href='https://rdrr.io/r/base/summary.html'>summary</a></span><span class='op'>(</span><span class='va'>m.lm2</span><span class='op'>)</span><span class='op'>$</span><span class='va'>coefficients</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>19</span>,<span class='op'>]</span> <span class='op'>|&gt;</span></span>
-<span>  <span class='fu'>knitr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/knitr/man/kable.html'>kable</a></span><span class='op'>(</span>digits <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span></span></code></pre>
+<span><span class='va'>m.lm2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='st'>"Reggresion 2"</span> <span class='op'>=</span> </span>
+<span>                 <span class='fu'><a href='https://rdrr.io/r/stats/lm.html'>lm</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>cwed</span>, <span class='va'>life_exp</span> <span class='op'>~</span> <span class='va'>UI_rep_single</span> <span class='op'>+</span> <span class='va'>SI_rep_single</span> <span class='op'>+</span> <span class='va'>pen_rep_single</span> <span class='op'>+</span> <span class='va'>MinPen_rep_single</span> <span class='op'>+</span> <span class='va'>UI_rep_family</span> <span class='op'>+</span> <span class='va'>SI_rep_family</span> <span class='op'>+</span> <span class='va'>pen_rep_family</span> <span class='op'>+</span> <span class='va'>MinPen_rep_family</span> <span class='op'>+</span> <span class='va'>UI_cov</span> <span class='op'>+</span> <span class='va'>SI_cov</span> <span class='op'>+</span> <span class='va'>pen_cov</span> <span class='op'>+</span> <span class='va'>UI_wait</span> <span class='op'>+</span> <span class='va'>SI_wait</span> <span class='op'>+</span> <span class='va'>UI_qual</span> <span class='op'>+</span> <span class='va'>SI_qual</span> <span class='op'>+</span> <span class='va'>pen_qual</span> <span class='op'>+</span> <span class='va'>pen_ratio</span> <span class='op'>+</span> <span class='va'>wage</span> <span class='op'>+</span> <span class='va'>country</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span><span class='op'>(</span><span class='va'>year</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='va'>cm2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"UI_rep_single"</span> <span class='op'>=</span> <span class='st'>"Unemployment Insurance Single Replacement Rate"</span>,</span>
+<span>        <span class='st'>"SI_rep_single"</span> <span class='op'>=</span> <span class='st'>"Sickness Insurance Single Replacement Rate"</span>,</span>
+<span>        <span class='st'>"pen_rep_single"</span> <span class='op'>=</span> <span class='st'>"Standard Pension Single Replacement Rate"</span>,</span>
+<span>        <span class='st'>"MinPen_rep_single"</span> <span class='op'>=</span> <span class='st'>"Minimum Pension Single Replacement Rate"</span>,</span>
+<span>        <span class='st'>"UI_rep_family"</span> <span class='op'>=</span> <span class='st'>"Unemployment Insurance Family Replacement Rate"</span>,</span>
+<span>        <span class='st'>"SI_rep_family"</span> <span class='op'>=</span> <span class='st'>"Sickness Insurance Family Replacement Rate"</span>,</span>
+<span>        <span class='st'>"pen_rep_family"</span> <span class='op'>=</span> <span class='st'>"Standard Pension Family Replacement Rate"</span>,</span>
+<span>        <span class='st'>"MinPen_rep_family"</span> <span class='op'>=</span> <span class='st'>"Minimum Pension Family Replacement Rate"</span>,</span>
+<span>        <span class='st'>"UI_cov"</span> <span class='op'>=</span> <span class='st'>"Unemployment Insurance Coverage"</span>,</span>
+<span>        <span class='st'>"SI_cov"</span> <span class='op'>=</span> <span class='st'>"Sickness Insurance Coverage"</span>,</span>
+<span>        <span class='st'>"pen_cov"</span> <span class='op'>=</span> <span class='st'>"Pension Coverage"</span>,</span>
+<span>        <span class='st'>"UI_wait"</span> <span class='op'>=</span> <span class='st'>"Unemployment Insurance Wait Period"</span>,</span>
+<span>        <span class='st'>"SI_wait"</span> <span class='op'>=</span> <span class='st'>"Sickness Insurance Wait Period"</span>,</span>
+<span>        <span class='st'>"UI_qual"</span> <span class='op'>=</span> <span class='st'>"Unemployment Insurance Qualification Period"</span>,</span>
+<span>        <span class='st'>"SI_qual"</span> <span class='op'>=</span> <span class='st'>"Sickness Insurance Qualification Period"</span>,</span>
+<span>        <span class='st'>"pen_qual"</span> <span class='op'>=</span> <span class='st'>"Years of Pension to be Fully Covered"</span>,</span>
+<span>        <span class='st'>"pen_ratio"</span> <span class='op'>=</span> <span class='st'>"Pension Ratio of Employee to Employer and Employee Contributions"</span>,</span>
+<span>        <span class='st'>"wage"</span> <span class='op'>=</span> <span class='st'>"Average Production Worker Wage"</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='fu'><a href='https://vincentarelbundock.github.io/modelsummary/reference/modelsummary.html'>modelsummary</a></span><span class='op'>(</span><span class='va'>m.lm2</span>, coef_map <span class='op'>=</span> <span class='va'>cm2</span>, stars <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></span></code></pre>
 </div>
-<table>
+<table style="NAborder-bottom: 0; width: auto !important; margin-left: auto; margin-right: auto;" class="table">
 <thead>
-<tr class="header">
-<th style="text-align: left;"></th>
-<th style="text-align: right;">Estimate</th>
-<th style="text-align: right;">Std. Error</th>
-<th style="text-align: right;">t value</th>
-<th style="text-align: right;">Pr(&gt;|t|)</th>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:center;">
+Reggresion 2
+</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">79.53</td>
-<td style="text-align: right;">0.37</td>
-<td style="text-align: right;">216.10</td>
-<td style="text-align: right;">0.00</td>
+<tr>
+<td style="text-align:left;">
+Unemployment Insurance Single Replacement Rate
+</td>
+<td style="text-align:center;">
+−0.254
+</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">UI_rep_single</td>
-<td style="text-align: right;">-0.25</td>
-<td style="text-align: right;">0.61</td>
-<td style="text-align: right;">-0.41</td>
-<td style="text-align: right;">0.68</td>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:center;">
+(0.613)
+</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">UI_rep_family</td>
-<td style="text-align: right;">2.06</td>
-<td style="text-align: right;">0.53</td>
-<td style="text-align: right;">3.86</td>
-<td style="text-align: right;">0.00</td>
+<tr>
+<td style="text-align:left;">
+Sickness Insurance Single Replacement Rate
+</td>
+<td style="text-align:center;">
+1.447**
+</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">SI_rep_single</td>
-<td style="text-align: right;">1.45</td>
-<td style="text-align: right;">0.49</td>
-<td style="text-align: right;">2.95</td>
-<td style="text-align: right;">0.00</td>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:center;">
+(0.490)
+</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">SI_rep_family</td>
-<td style="text-align: right;">-2.50</td>
-<td style="text-align: right;">0.45</td>
-<td style="text-align: right;">-5.52</td>
-<td style="text-align: right;">0.00</td>
+<tr>
+<td style="text-align:left;">
+Standard Pension Single Replacement Rate
+</td>
+<td style="text-align:center;">
+−0.669
+</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">MinPen_rep_single</td>
-<td style="text-align: right;">-0.92</td>
-<td style="text-align: right;">0.57</td>
-<td style="text-align: right;">-1.60</td>
-<td style="text-align: right;">0.11</td>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:center;">
+(0.528)
+</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">MinPen_rep_family</td>
-<td style="text-align: right;">0.86</td>
-<td style="text-align: right;">0.42</td>
-<td style="text-align: right;">2.07</td>
-<td style="text-align: right;">0.04</td>
+<tr>
+<td style="text-align:left;">
+Minimum Pension Single Replacement Rate
+</td>
+<td style="text-align:center;">
+−0.916
+</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">pen_rep_single</td>
-<td style="text-align: right;">-0.67</td>
-<td style="text-align: right;">0.53</td>
-<td style="text-align: right;">-1.27</td>
-<td style="text-align: right;">0.21</td>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:center;">
+(0.573)
+</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">pen_rep_family</td>
-<td style="text-align: right;">1.53</td>
-<td style="text-align: right;">0.42</td>
-<td style="text-align: right;">3.66</td>
-<td style="text-align: right;">0.00</td>
+<tr>
+<td style="text-align:left;">
+Unemployment Insurance Family Replacement Rate
+</td>
+<td style="text-align:center;">
+2.058***
+</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">UI_cov</td>
-<td style="text-align: right;">-1.77</td>
-<td style="text-align: right;">0.26</td>
-<td style="text-align: right;">-6.82</td>
-<td style="text-align: right;">0.00</td>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:center;">
+(0.534)
+</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">UI_wait</td>
-<td style="text-align: right;">-0.02</td>
-<td style="text-align: right;">0.01</td>
-<td style="text-align: right;">-1.77</td>
-<td style="text-align: right;">0.08</td>
+<tr>
+<td style="text-align:left;">
+Sickness Insurance Family Replacement Rate
+</td>
+<td style="text-align:center;">
+−2.498***
+</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">SI_cov</td>
-<td style="text-align: right;">0.88</td>
-<td style="text-align: right;">0.23</td>
-<td style="text-align: right;">3.83</td>
-<td style="text-align: right;">0.00</td>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:center;">
+(0.452)
+</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">SI_wait</td>
-<td style="text-align: right;">0.01</td>
-<td style="text-align: right;">0.01</td>
-<td style="text-align: right;">0.38</td>
-<td style="text-align: right;">0.71</td>
+<tr>
+<td style="text-align:left;">
+Standard Pension Family Replacement Rate
+</td>
+<td style="text-align:center;">
+1.526***
+</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">pen_cov</td>
-<td style="text-align: right;">0.58</td>
-<td style="text-align: right;">0.15</td>
-<td style="text-align: right;">3.92</td>
-<td style="text-align: right;">0.00</td>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:center;">
+(0.417)
+</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">pen_ratio</td>
-<td style="text-align: right;">0.59</td>
-<td style="text-align: right;">0.26</td>
-<td style="text-align: right;">2.25</td>
-<td style="text-align: right;">0.02</td>
+<tr>
+<td style="text-align:left;">
+Minimum Pension Family Replacement Rate
+</td>
+<td style="text-align:center;">
+0.864*
+</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">UI_qual</td>
-<td style="text-align: right;">0.00</td>
-<td style="text-align: right;">0.00</td>
-<td style="text-align: right;">-9.66</td>
-<td style="text-align: right;">0.00</td>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:center;">
+(0.417)
+</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">SI_qual</td>
-<td style="text-align: right;">0.00</td>
-<td style="text-align: right;">0.00</td>
-<td style="text-align: right;">-2.99</td>
-<td style="text-align: right;">0.00</td>
+<tr>
+<td style="text-align:left;">
+Unemployment Insurance Coverage
+</td>
+<td style="text-align:center;">
+−1.774***
+</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">pen_qual</td>
-<td style="text-align: right;">-0.05</td>
-<td style="text-align: right;">0.00</td>
-<td style="text-align: right;">-14.15</td>
-<td style="text-align: right;">0.00</td>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:center;">
+(0.260)
+</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">wage</td>
-<td style="text-align: right;">0.00</td>
-<td style="text-align: right;">0.00</td>
-<td style="text-align: right;">10.56</td>
-<td style="text-align: right;">0.00</td>
+<tr>
+<td style="text-align:left;">
+Sickness Insurance Coverage
+</td>
+<td style="text-align:center;">
+0.880***
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:center;">
+(0.229)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pension Coverage
+</td>
+<td style="text-align:center;">
+0.581***
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:center;">
+(0.148)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Unemployment Insurance Wait Period
+</td>
+<td style="text-align:center;">
+−0.020+
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:center;">
+(0.011)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sickness Insurance Wait Period
+</td>
+<td style="text-align:center;">
+0.005
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:center;">
+(0.013)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Unemployment Insurance Qualification Period
+</td>
+<td style="text-align:center;">
+−0.0009***
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:center;">
+(0.00009)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sickness Insurance Qualification Period
+</td>
+<td style="text-align:center;">
+−0.001**
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:center;">
+(0.0003)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Years of Pension to be Fully Covered
+</td>
+<td style="text-align:center;">
+−0.046***
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:center;">
+(0.003)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pension Ratio of Employee to Employer and Employee Contributions
+</td>
+<td style="text-align:center;">
+0.588*
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:center;">
+(0.261)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Average Production Worker Wage
+</td>
+<td style="text-align:center;">
+0.0000005***
+</td>
+</tr>
+<tr>
+<td style="text-align:left;box-shadow: 0px 1px">
+</td>
+<td style="text-align:center;box-shadow: 0px 1px">
+(5e−08)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Num.Obs.
+</td>
+<td style="text-align:center;">
+486
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+R2
+</td>
+<td style="text-align:center;">
+0.980
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+R2 Adj.
+</td>
+<td style="text-align:center;">
+0.977
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+AIC
+</td>
+<td style="text-align:center;">
+86.0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+BIC
+</td>
+<td style="text-align:center;">
+404.1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Log.Lik.
+</td>
+<td style="text-align:center;">
+33.014
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+RMSE
+</td>
+<td style="text-align:center;">
+0.23
+</td>
 </tr>
 </tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; " colspan="100%">
+<sup></sup> + p &lt; 0.1, * p &lt; 0.05, ** p &lt; 0.01, *** p &lt; 0.001
+</td>
+</tr>
+</tfoot>
 </table>
 </div>
-<p>The following regression is a multivariate model to analyze the relationship between the three main explanatory variables and the outcome variable controlling for other features of the insurance programs. Year and country fixed effects are included but not shown in the final table.</p>
-<p>Each one unit increase in SI_rep_single leads to a 2.085e+00 increase in life expectancy when holding all other variables constant. The relationship is statistically significant.</p>
-<p>(define one unit increase)</p>
+<p>The following regression is a multivariate model to analyze the relationship between the three main explanatory variables and the outcome variable controlling for other features of the insurance programs. Year and country fixed effects are included but not shown in the final table.This regression shows that on average while controlling for the other variables:</p>
+<p>Each one percent increase in the unemployment insurance single replacement rate (UI_rep_single) leads to a -0.254 decrease in life expectancy (life_exp), markedly less than the 1.238 increase of the previous regression.</p>
+<p>Each one percent increase in the sickness insurance single replacement rate (SI_rep_single) leads to a 1.447 increase in life expectancy (life_exp), markedly more than the 0.151 decrease of the previous regression.</p>
+<p>Each one percent increase in the pension insurance single replacement rate (pen_rep_single) leads to a 0.669 decrease in life expectancy (life_exp), markedly less than the 0.822 increase of the previous regression.</p>
+<p>At the test level <span class="math inline">\(\alpha = 0.05\)</span>,
+the relationship between UI_rep_single and life_exp is not statistically significant as it has a p-value of 0.678, compared with the very statistically significant p-value of 0 of the previous regression.
+The relationship between SI_rep_single and life_exp is statistically significant as it has a p-value of 0.00334, compared with the not statistically significant p-value of 0.54. of the previous regression.
+The relationship between pen_rep_single and life_exp is not statistically significant as it has a p-value of 0.2059, compared with the statistically significant p-value of 0.0078 of the previous regression.</p>
+<p>The p-value shows that there is a high probability that the estimated association between SI_rep_single and life_exp is not due to random chance, and that there is a low probability for UI_rep_single and pen_rep_single.</p>
+<p>The standard error values measures the magnitude of the standard deviation of the sampling distribution from the population. In this case, UI_rep_single has a SE of 0.613 (previously 0.222), SI_rep_single is 0.490 (previously 0.247), and pen_rep_single is 0.528 (previously 0.308). Sickness insurance thus has the lowest standard deviation and is most representative of the total population, followed by pensions then unemployment insurance. In this model, all explanatory variables are less representative of the total population.</p>
+<p>The Adjusted R-squared value of the regression is 0.9767 (previously 0.948) which shows that the model explains ~98% of the variation in the variable life_exp. Thus, including the other insurance program features in the regression allows this model to explain ~3% more of the variation in life_exp than before.</p>
+<p>The change in statistical significance and coefficient estimates for the main explanatory variables from the last regression indicates that the other variables included in this regression impact how the explanatory variables impact the outcome variable. The addition of such variables also help solidify the relationship between the explanatory and outcome variables as seen through the Adjusted R-squared increase. It is important to look at Adjusted R-squared because it takes the number of variables into account and penalizes variables that do not impact outcome. Thus, it is a better fit for the data to look at the R-squared when it is adjusted.</p>
 <h2 id="conclusion">Conclusion</h2>
-<ul>
-<li>shortcomings</li>
-<li>if i had unlimited resources what would I do to improve: unethical randomized trial (explain importance of randomization for eliminating confounding variables)</li>
-<li>what are potential confounders</li>
-</ul>
+<p>The main explanatory variables are not randomly assigned and are thus not treatment variables that causally impact life expectancy. The second regression model is a better fit for the data as seen by the adjusted R-squared. There, only SI_rep_single has a statistically significant relationship with life_exp when holding controlling for all other features of the various insurance programs. That positive correlation is not causal, especially because of the presence of confounding variables.</p>
+<p>The main confounders that invalidate causality are the social determinates of health. These include socioeconomic status, stress levels, and racial disparities (which could be measured by the Gini coefficient). All these variables impact life expectancy, and unlike other variables such as GDP per capita, cannot be controlled by looking at samples across 33 countries and 42 years. These confounders are excluded from the models due to data unavailability, so causality between the explanatory variables and the outcome variable cannot be established.</p>
+<p>This project has multiple shortcomings due to limited data besides the aforementioned confounding bias. The issue of directionality is central as the explanatory variables clearly had some relation to the outcome variable, although the effect itself is not clear.</p>
+<p>If the study had unlimited resources, these shortcomings could be addressed by conducting a randomized controlled trial to control each explanatory variable over a large sample size. This would entail recording how long people live when giving them varying degrees of insurance benefits (higher and lower replacement rates). The sampled groups would need to be randomized as to eliminate bias in treatment assignment because each group would be comparable.</p>
+<p>While such a study would be ideal for testing causality for the relationship between replacement rates and life expectancy, it would be highly unethical. Testing how long people live by adding or removing welfare benefits is clearly immoral as it allows some people to potentially die earlier than they would have just to clarify data. Thus, such a randomized controlled trial would not be possible. Available data may not always be perfect for drawing concrete conclusions, but that may be for good reason.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
@@ -1876,6 +2212,15 @@ This is how the outcome variable changed over time in each country. The blue lin
 <div class="d-appendix">
 </div>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 
 <!--radix_placeholder_site_after_body-->
 <!--/radix_placeholder_site_after_body-->
